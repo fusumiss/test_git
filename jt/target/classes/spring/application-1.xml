@@ -1,0 +1,87 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+http://www.springframework.org/schema/tx
+http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+http://www.springframework.org/schema/aop
+http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+http://www.springframework.org/schema/mvc
+http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+http://www.springframework.org/schema/util
+http://www.springframework.org/schema/util/spring-util-4.0.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+    <!--1.包扫描作用域
+        当前包 和 子包，可以写多个包路径，使用逗号隔开
+        * -代表一级包路径 ， ** -代表任意级的包路径
+        -->
+    <context:component-scan base-package="com.myself"/>
+
+    <!--2.配置数据源-->
+    <!--2.1 spring容器添加properties配置文件
+        util标签 引入集合时，必须使用#{id.属性} 或者 #{id}
+        从spring容器中取值，使用${}
+    -->
+    <context:property-placeholder location="classpath:/properties/*.properties"/>
+    <!--2.2 管理数据源-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <!--3.开启事务标签-->
+    <tx:annotation-driven/>
+
+    <!--4.整合mybatis
+        id 默认是类名 且首字母小写
+        为spring容器的对象属性赋值：
+                set注入  -调用对象的set方法为属性赋值
+                构造注入 -调用对象的构造方法为属性赋值
+                核心理念：反射调用的是无参构造 Class.forname();
+    -->
+    <bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="configLocation" value="classpath:/mybatis/mybatis-config.xml"/>
+        <property name="mapperLocations" value="classpath:/mybatis/mappers/*.xml"/>
+        <!--添加别名配置包,之后动态拼接resultType的类名-->
+        <property name="typeAliasesPackage" value="com.myself.pojo"/>
+        <!--导入数据库-->
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--spring创建代理对象的策略：
+            如果被代理者，有接口，采用jdk的代理方式，本质是接口的实现类
+            如果被代理者，没有接口，则使用cglib 创建代理，则代理对象是被代理者的子类
+        -->
+    <!--5.配置mapper接口的 代理-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+            <property name="basePackage" value="com.myself.mapper"/>
+    </bean>
+
+    <!--配置MVC
+            1.开启MVC注解标签
+            2.配置视图解析器
+            3.放行静态资源
+    -->
+    <!--1.开启MVC注解标签-->
+    <mvc:annotation-driven/>
+    <!--2.配置视图解析器,id 默认是类的 首字母小写
+            是spring的内部资源
+        -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+            <property name="prefix" value="/WEB-INF/"/>
+            <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <!--3.放行静态资源-->
+    <mvc:default-servlet-handler/>
+</beans>

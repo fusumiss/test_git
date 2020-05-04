@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--关于驼峰自动映射说明
+        使用mybatis进行结果集映射时resultType不能使用
+        只能使用resultMap完成，很不方便
+        升级：引入驼峰映射规则
+        -将字段中的 _ 自动去除且之后的首字母大写之后使用resultType映射到对象中
+                如：user_id ~~ userId ~~ 使用resultType 映射到对象中
+    -->
+    <settings>
+        <!--开启驼峰自动映射-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+</configuration>

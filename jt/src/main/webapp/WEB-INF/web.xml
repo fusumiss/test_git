@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+                      http://java.sun.com/xml/ns/javaee/web-app_3_1.xsd"
+         version="2.5"
+         metadata-complete="true">
+
+  <!--配置springmvc流程
+        1.前端控制器  -接收用户请求，及时响应-即将视图view渲染到页面
+        2.处理器映射器 -将用户请求对应的映射路径返回
+        3.处理器适配器 -找到与之匹配的处理器进行业务操作，返回modelandview
+        4.视图解析器  -将模型进行解析，返回视图
+        5.渲染到页面
+
+      -->
+  <!--1.配置前端控制器-->
+    <servlet>
+      <servlet-name>dispatcherServlet</servlet-name>
+      <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+      <!--初始化spring容器-->
+      <init-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:/spring/application*.xml</param-value>
+      </init-param>
+      <!--表示该servlet第一个实例化，即Tomcat启动时，第一个实例化
+          但默认是第一次请求访问时候才实例化，影响效率-->
+      <load-on-startup>1</load-on-startup>
+    </servlet>
+  <servlet-mapping>
+    <servlet-name>dispatcherServlet</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+  <!-- /的含义
+      1.拦截所有请求
+      2.拦截静态资源，如 js/css/image
+      3.放行 .jsp 等动态页面
+  -->
+  <!--解决全站post乱码问题-->
+  <filter>
+    <filter-name>encodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>encodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <!---->
+  <!---->
+  <!---->
+
+</web-app>
