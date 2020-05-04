@@ -12,6 +12,7 @@ import java.util.List;
  * Create By   on
  */
 @Service
+//@Transactional
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -20,5 +21,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAll() {
         return userMapper.findAll();
+    }
+
+    @Override
+    public void addUser(User user) {
+        userMapper.addUser(user);
     }
 }

@@ -74,6 +74,7 @@ http://www.springframework.org/schema/context/spring-context-4.0.xsd">
     -->
     <!--1.开启MVC注解标签-->
     <mvc:annotation-driven/>
+
     <!--2.配置视图解析器,id 默认是类的 首字母小写
             是spring的内部资源
         -->

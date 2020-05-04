@@ -1,6 +1,7 @@
 package com.myself.mapper;
 
 import com.myself.pojo.User;
+import org.apache.ibatis.annotations.Insert;
 
 import java.util.List;
 
@@ -16,4 +17,7 @@ public interface UserMapper {
      */
    // @Select("select * from tb_brand")
     List<User> findAll();
+
+    @Insert("insert into user values(null,#{name},#{age},#{sex})")
+    void addUser(User user);
 }
